@@ -22,8 +22,8 @@ func main() {
 
 	// below variables defines Mode of the program
 	var serverMode bool
-	flag.BoolVar(&serverMode, "server", false, "using server mode")
 	var clientMode bool
+	flag.BoolVar(&serverMode, "server", false, "using server mode")
 	flag.BoolVar(&clientMode, "client", false, "using client mode")
 
 	flag.Parse()
@@ -32,27 +32,24 @@ func main() {
 	// it decides to execute which mode according to the flags
 	switch {
 	case serverMode:
-		Server(WSdata)
+		server(WSdata)
 	case clientMode:
-		Client(WSdata)
+		client(WSdata)
 	default:
 		fmt.Println("at first you have to define mode, use `-h` flag for more information")
 	}
 }
 
-func Client(WSdata WebSocketAddress) {
-	wsa := fmt.Sprintf("wss://%s:%d", WSdata.ip, WSdata.port)
+func client(WSdata WebSocketAddress) {
+	wsa := fmt.Sprintf("ws://%s:%d", WSdata.ip, WSdata.port)
 	fmt.Println(wsa)
 }
 
-func Server(WSdata WebSocketAddress) {
+func server(WSdata WebSocketAddress) {
+	log.Printf("running in server mode: %v\n", WSdata)
 
-	wsa := fmt.Sprintf("%s:%d/", WSdata.ip, WSdata.port)
-
-	fmt.Println(wsa)
-	fmt.Println("server")
-	http.HandleFunc(wsa, echo)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", WSdata.port), nil))
+	http.HandleFunc("/", echo)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", WSdata.ip, WSdata.port), nil))
 
 }
 
