@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// WebSocketAddress has websocket properties
 type WebSocketAddress struct {
 	ip   string
 	port int
